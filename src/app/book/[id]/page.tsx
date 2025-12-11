@@ -1,13 +1,22 @@
 import { BookData } from '@/types'
 import style from './page.module.css'
+import { notFound } from 'next/navigation'
+
+export function generateStaticParams() {
+  return [{ id: '1' }, { id: '2' }, { id: '3' }]
+}
 
 export default async function Page({ params }: { params: Promise<{ id: string | string[] }> }) {
   const { id } = await params
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`)
 
   if (!response.ok) {
-    return <div>도서 정보를 불러오지 못했습니다.</div>
+    if (response.status === 404) {
+      notFound()
+    }
+    return <div>오류가 발생했습니다</div>
   }
+
   const book: BookData = await response.json()
   const { title, subTitle, description, author, publisher, coverImgUrl } = book
 
