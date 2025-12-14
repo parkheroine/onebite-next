@@ -1,6 +1,5 @@
 'use server'
 
-import { delay } from '@/utils/delay'
 import { revalidateTag } from 'next/cache'
 
 export async function createReviewAction(
@@ -22,7 +21,6 @@ export async function createReviewAction(
   }
 
   try {
-    await delay(2000)
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`, {
       method: 'POST',
       body: JSON.stringify({ bookId, content, author }),
