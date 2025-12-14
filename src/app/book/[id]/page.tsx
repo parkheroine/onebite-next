@@ -5,8 +5,15 @@ import ReviewItem from '@/components/review-item'
 import ReviewEditor from '@/components/review-editor'
 import Image from 'next/image'
 
-export function generateStaticParams() {
-  return [{ id: '1' }, { id: '2' }, { id: '3' }]
+export async function generateStaticParams() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`)
+  if (!res.ok) {
+    throw new Error(res.statusText)
+  }
+
+  const books: BookData[] = await res.json()
+
+  return books.map((item) => ({ id: item.id.toString() }))
 }
 
 async function BookDetail({ bookId }: { bookId: string }) {
